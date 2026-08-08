@@ -1233,4 +1233,58 @@ footer {
     background-position: center;
     box-shadow: 0 20px 45px rgba(0, 0, 0, 0.65); /* Floating Depth Shadow */
 }
+/* PWA Banner Styles - Top Fixed Position */
+.pwa-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #1e293b; /* နောက်ခံအရောင် (အမည်းရောင်စပ်စပ်) */
+    color: #ffffff;
+    padding: 12px 16px;
+    z-index: 99999;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
 
+.banner-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 800px;
+    margin: 0 auto;
+    font-size: 14px;
+}
+
+.banner-buttons {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+#pwa-install-btn {
+    background-color: #10b981; /* Install ခလုတ် (အစိမ်းရောင်) */
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+#pwa-install-btn:hover {
+    background-color: #059669;
+}
+
+#pwa-close-btn {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#pwa-close-btn:hover {
+    color: #ffffff;
+}
