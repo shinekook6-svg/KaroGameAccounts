@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karo Game Account Store</title>
+    <!-- Google Fonts & GSAP Animation -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- GSAP & ScrollTrigger CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="style.css">
+    <!-- PWA Manifest Link -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0b0f19">
+
+<!-- Service Worker Registration Script (Body အောက်ဆုံးမှာ ဒါမှမဟုတ် head မှာ ထည့်နိုင်သည်) -->
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js')
+      .then(() => console.log('Service Worker Registered!'))
+      .catch((err) => console.log('Service Worker Failed: ', err));
+  }
+</script>
+
+</head>
+<body>
+ 
+  <!-- Cyberpunk Style Preloader -->
+<div id="loader-screen">
+    <div class="loader-bg" style="background-image: url('Loading.png');"></div>
+    <div class="loader-overlay"></div>
+
+    <div class="loader-content">
+        <!-- Powered By Text -->
+        <p class="powered-by">POWERED BY KARO</p>
+        
+        <!-- Percentage Readout -->
+        <div class="percent-wrapper">
+            <span id="progress-text">0</span><span class="percent-symbol">%</span>
+        </div>
+
+        <!-- Custom Neon Progress Bar -->
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+        </div>
+
+        <!-- Continue Button (Default မှာ ဖျောက်ထားမည်) -->
+        <button id="continue-btn" class="continue-btn" onclick="enterApp()">
+            CONTINUE
+        </button>
+    </div>
+</div>
+
+    <!-- Parallax Canvas Background -->
+    <canvas id="parallax-canvas"></canvas>
+
+    <!-- 🌟 TOP NAVBAR / HEADER (ပြင်ဆင်ထားသည်) -->
+    <header class="top-header">
+        <div class="brand-title" onclick="goHome()" style="cursor: pointer">KARO<span>STORE</span></div>
+            <!-- ညာဘက် Active Users Counter -->
+        <div class="active-users-box">
+          <span class="live-dot"></span>
+            <svg class="eye-icon" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            <span id="active-user-count">12 </span> Active
+        </div>
+    </header>
+
+    <!-- Main Dynamic Application Container -->
+    <main id="main-app">
+         <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-badge">GAMING ACCOUNTS SHOWCASE</div>
+            <h1 class="hero-content">LEVEL UP <span class="cyan-text">YOUR GAMING</span></h1>
+            <p class="hero-desc"> Mobile Legend နှင့် Pubg တို့၏ Accounts များကိုသာ ရောင်းချသေးပါသည်။</p>
+            <!-- Scroll Down Indicator (Arrow.png ဖြင့် ပြင်ဆင်ထားသည်) -->
+            <div class="scroll-indicator">
+                <span>SCROLL DOWN</span>
+                <img src="Arrow.png" alt="Scroll Down" class="scroll-arrow-img">
+            </div>
+        </section>
+      
+        <!-- Official Statement / Bio Section -->
+        <section id="bio-section" class="bio-section">
+            <div class="glass-card bio-card">
+                <!-- Top Header inside Card: Info Icon, Title & Verified Badge -->
+                <div class="bio-card-header">
+                    <div class="bio-title-group">
+                        <span class="info-icon">ℹ️</span>
+                        <div>
+                            <h3 class="bio-main-title">OFFICIAL STATEMENT</h3>
+                            <p class="bio-sub-brand">Karo Game Store</p>
+                        </div>
+                    </div>
+                    <div class="verified-badge">
+                        <span>✓ Verified</span>
+                    </div>
+                </div>
+
+                <!-- Main Myanmar Quote Text with Cyan Left Border -->
+                <div class="bio-quote-box">
+                    <p class="myanmar-bio">
+                        ဤ Web Store သည် Karo ၏ Official Store ဖြစ်ပြီး Game Accounts များကို Professional ဆန်ဆန် ဝယ်ယူနိုင်ရန် အဓိက ရည်ရွယ်ထားပါသည်။
+                    </p>
+                </div>
+
+                <!-- English Translation / Subtitle -->
+                <p class="english-bio-sub">
+                    This web store is the official Karo store, primarily designed to allow professional purchasing of game accounts.
+                </p>
+
+                <!-- Feature Tags Grid -->
+                <div class="bio-tags-grid">
+                    <span class="bio-tag">✓ 100% Legitimate</span>
+                    <span class="bio-tag">✓ Safe Transfer</span>
+                    <span class="bio-tag">✓ Myanmar Support</span>
+                    <span class="bio-tag">✓ No Scam Guarantee</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Accounts / Game Selection Section -->
+        <section class="accounts-section" id="accounts-section">
+            <h2 class="section-title">CHOOSE GAME</h2>
+            
+            <div class="game-select-container">
+                <!-- Mobile Legends Game Card -->
+                <div class="game-select-card fade-card" onclick="openMlbbCategories()">
+                    <img src="MlbbLogo.jpeg" alt="Mobile Legends">
+                    <div class="game-card-overlay">
+                        <h3>MOBILE LEGENDS</h3>
+                        <p>Mythic Ranks, Rare Skins & Accounts</p>
+                    </div>
+                </div>
+
+                <!-- PUBG Mobile Game Card -->
+                <div class="game-select-card fade-card" onclick="openPubgAccounts()">
+                    <img src="PubgLogo.jpeg" alt="PUBG Mobile">
+                    <div class="game-card-overlay">
+                        <h3>PUBG MOBILE</h3>
+                        <p>X-Suits, Glacier Guns & Conqueror</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 🌟 FEATURES 4 GRIDS SECTION -->
+        <section class="features-section">
+            <div class="features-container">
+                
+                <!-- Feature 1: Lowest Prices -->
+                <div class="feature-card">
+                    <div class="feature-icon-box">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+                    </div>
+                    <h3>Lowest prices</h3>
+                    <p>အလွန်တန်သော ဈေးနှုန်းများ</p>
+                </div>
+
+                <!-- Feature 2: Customer Support -->
+                <div class="feature-card">
+                    <div class="feature-icon-box">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg>
+                    </div>
+                    <h3>Customer support</h3>
+                    <p>24/7 Telegram chat support</p>
+                </div>
+
+                <!-- Feature 3: Fast Delivery -->
+                <div class="feature-card">
+                    <div class="feature-icon-box">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    </div>
+                    <h3>Fast delivery</h3>
+                    <p>မိနစ်၃၀ အတွင်း အရောင်းဝယ်ပြီးစီးခြင်း</p>
+                </div>
+
+                <!-- Feature 4: Local Payments -->
+                <div class="feature-card">
+                    <div class="feature-icon-box">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+                    </div>
+                    <h3>Local payments</h3>
+                    <p>Wave/KBZ payment တို့ဖြင့် ငွေချေနိုင်ခြင်း</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 🌟 TELEGRAM COMMUNITY JOIN SECTION -->
+        <section class="telegram-join-section">
+            <div class="glass-card telegram-card">
+                <p class="telegram-invite-text">
+                    ဆက်သွယ်ရန် နှင့် Update များကို စောင့်မျှော် ကြည့်ရှုလိုပါက ကျွန်တော် တို့နှင့်အတူ ပူးပေါင်းပါ
+                </p>
+              <a href="https://t.me/KaroDevo" target="_blank" class="telegram-btn">
+    <!-- တကယ့်သေသပ်မှန်ကန်သော Telegram Paper Plane SVG -->
+    <svg class="telegram-svg-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="22" y1="2" x2="11" y2="13"></line>
+        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+    </svg>
+    <span>Telegram</span>
+</a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>CopyRight &copy; 2026 Karo Game Account Store. All Rights Reserved.</p>
+    </footer>
+
+    <!-- JavaScript Files -->
+    <script src="accounts.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
