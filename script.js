@@ -779,6 +779,15 @@ function initCardScrollAnimation() {
 window.addEventListener("DOMContentLoaded", () => {
     initCardScrollAnimation();
 });
+let isLoaderFinished = false;
+
+// 🌟 PWA Banner အတွက် လိုအပ်သော Variable များ
+let deferredPrompt; 
+let isAppEntered = false; 
+
+const pwaBanner = document.getElementById('pwa-install-banner');
+const installBtn = document.getElementById('pwa-install-btn');
+const closeBtn = document.getElementById('pwa-close-btn');
 // Preload Assets Directory List
 const assetsToLoad = [
     "MlbbLogo.jpeg", "Loading.png", "PubgLogo.jpeg", "BackIcon.png", "Arrow.png",
@@ -978,9 +987,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // User Continue နှိပ်လျှင် Main App သို့ ဝင်မည့် Function
 function enterApp() {
+    isAppEntered = true; // 🌟 အသံထည့်ရန်
+    
     const loader = document.getElementById('loader-screen');
     if (loader) loader.classList.add('loader-hidden');
+
+    // 🌟 အထဲရောက်တာနဲ့ Prompt ရှိရင် Banner ပြမည်
+    if (deferredPrompt && pwaBanner) {
+        pwaBanner.style.display = 'block';
+    }
 }
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    
+    // User က App ထဲ ရောက်နေပြီဆိုမှ Banner ကို ပြမယ်
+    if (isAppEntered && pwaBanner) {
+        pwaBanner.style.display = 'block';
+    }
+});
 // Main Loader Controller Logic
 async function startAppPreloader() {
     const fill = document.getElementById('progress-fill');
