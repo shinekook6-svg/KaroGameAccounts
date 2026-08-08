@@ -1,5 +1,5 @@
 {
-  "name": "Karo Game Account Store",
+  "name": "Karo Game Store",
   "shortName": "KaroStore",
   "start_url": "/",
   "display": "standalone",
@@ -9,7 +9,8 @@
     {
       "src": "Pwa.png",
       "sizes": "192x192 512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
