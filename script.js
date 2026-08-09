@@ -779,7 +779,6 @@ function initCardScrollAnimation() {
 window.addEventListener("DOMContentLoaded", () => {
     initCardScrollAnimation();
 });
-let isLoaderFinished = false;
 
 // 🌟 PWA Banner အတွက် လိုအပ်သော Variable များ
 let deferredPrompt; 
@@ -788,16 +787,28 @@ let isAppEntered = false;
 const pwaBanner = document.getElementById('pwa-install-banner');
 const installBtn = document.getElementById('pwa-install-btn');
 const closeBtn = document.getElementById('pwa-close-btn');
-// Preload Assets Directory List
-const assetsToLoad = [
-    "MlbbLogo.jpeg", "Loading.png", "PubgLogo.jpeg", "BackIcon.png", "Arrow.png",
-    "SkinsBg.png", "RankSkinBg.png", "HighRankBg.png", "BudgetBg.png", "SkinsCard.jpg",
-    "Skins_info01.jpg", "Skins_info02.jpg", "Skins_info03.jpg", "Skins_info04.jpg", "Skins_info05.jpg",
-    "Skins_info06.jpg", "Skins_info07.jpg", "Skins_info08.jpg", "Skins_info09.jpg", "SkinTitle.png",
-    "M7.png", "Starlight.png", "Naruto.png",
-    "PopClick.mp3", "Swoosh1.mp3", "MouseClick.mp3", "Swoosh2.mp3", "Card_swoosh.mp3", "Noti.mp3"
-];
+
+// ၁။ App ကို Standalone (ဖုန်းထဲမှာ Install ပြီးသား App အနေနဲ့) ဖွင့်ထားခြင်း ရှိမရှိ အရင်စစ်မည်
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+if (isStandalone) {
+    // Install ပြီးသားဆိုရင် Banner ကို လုံးဝ ဖျောက်ထားမည်
+    if (pwaBanner) pwaBanner.style.display = 'none';
+} else {
+    // ဝင်လာတဲ့အခါ App ထဲရောက်ပြီးရင် ပေါ်စေရန် Event ဖမ်းမည်
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        
+        // User က App ထဲ ရောက်နေပြီဆိုရင် Banner ကို အမြဲပြမယ် (မပျောက်စေရ)
+        if (isAppEntered && pwaBanner) {
+            pwaBanner.style.display = 'block';
+        }
+    });
+}
+
 let isLoaderFinished = false;
+
 // Universal Sound Function (အသံဖိုင်များ အလွယ်တကူ ဖွင့်ရန်)
 // 1. Web Audio Context နှင့် Sound Buffer များ
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -985,17 +996,43 @@ document.addEventListener('DOMContentLoaded', () => {
     updateActiveUsers();
 });
 
-// User Continue နှိပ်လျှင် Main App သို့ ဝင်မည့် Function
+// Preloader ပြီးလို့ Continue နှိပ်တဲ့အခါ
 function enterApp() {
-    isAppEntered = true; // 🌟 အသံထည့်ရန်
+    isAppEntered = true; 
     
     const loader = document.getElementById('loader-screen');
     if (loader) loader.classList.add('loader-hidden');
 
-    // 🌟 အထဲရောက်တာနဲ့ Prompt ရှိရင် Banner ပြမည်
-    if (deferredPrompt && pwaBanner) {
+    // Standalone မဟုတ်ဘူး (Install မလုပ်ရသေးဘူး) ဆိုရင် အထဲရောက်တာနဲ့ Banner ကို အမြဲပြမည်
+    if (!isStandalone && pwaBanner) {
         pwaBanner.style.display = 'block';
     }
+}
+
+// 🌟 Install ခလုတ်နှိပ်တဲ့အခါ
+if (installBtn) {
+    installBtn.addEventListener('click', async () => {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+                console.log('User accepted the install prompt');
+                // Install လုပ်သွားပြီဆိုရင် Banner ကို ချက်ချင်းဖျောက်မည်
+                if (pwaBanner) pwaBanner.style.display = 'none';
+            }
+            deferredPrompt = null;
+        } else {
+            alert('သင့် Browser တွင် တိုက်ရိုက် Install လုပ်၍မရပါက (Add to Home Screen) ကို အသုံးပြုပေးပါ။');
+        }
+    });
+}
+
+// (အကယ်၍ ပိတ်ခလုတ် '✕' ကို လုံးဝ မသုံးတော့ဘူးဆိုရင် HTML မှာ ဖြုတ်ထားလို့ရပါတယ်။ 
+// တကယ်လို့ ထည့်ထားချင်တယ်ဆိုရင်တောင် နှိပ်လိုက်ရင် ခဏပဲပျောက်ပြီး ပြန်ဝင်လာတိုင်း ထပ်ပေါ်နေမှာဖြစ်ပါတယ်)
+if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+        if (pwaBanner) pwaBanner.style.display = 'none'; // ခတ္တပိတ်ရန် (သို့) ပိတ်ခလုတ်ကို HTML မှာ ဖြုတ်ထားနိုင်သည်
+    });
 }
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
