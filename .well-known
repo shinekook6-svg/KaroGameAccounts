@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.karo.gamestore",
+        "sha256_cert_fingerprints": ["28:1C:FC:91:2E:BE:68:86:14:75:3B:23:DD:1B:8E:58:3C:14:CF:FE:E9:07:A3:FB:EF:13:F9:AE:2C:0A:9E:9A"]
+      }
+    }]
